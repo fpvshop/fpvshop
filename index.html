@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FPVshop.nl — binnenkort open</title>
+<title>FPVshop.nl — Morgen vlieg je weer · binnenkort open</title>
 <meta name="description" content="FPVshop.nl — tinywhoops, onderdelen en accu's, op de plank in Nederland. Binnenkort open. / Tinywhoops, parts and batteries, stocked in the Netherlands. Opening soon.">
 <link rel="icon" type="image/png" href="logo.png">
 <style>
@@ -410,6 +410,7 @@
 
   var S = {
     nl: {
+      title:        'FPVshop.nl — Morgen vlieg je weer · binnenkort open',
       heroTomorrow: 'Morgen vlieg je weer',
       heroToday:    'Vandaag vlieg je weer',
       almost:       '*nou ja, bijna — binnenkort open',
@@ -424,6 +425,7 @@
       fsClose:      'Sluiten'
     },
     en: {
+      title:        'FPVshop.nl — Fly again tomorrow · opening soon',
       heroTomorrow: 'Fly again tomorrow',
       heroToday:    'Fly again today',
       almost:       '*well, almost — opening soon',
@@ -452,6 +454,7 @@
 
   function render() {
     var t = S[lang];
+    document.title = t.title;
     heroText.textContent = variantToday ? t.heroToday : t.heroTomorrow;
     almost.textContent = t.almost;
     lead.textContent = t.lead;
