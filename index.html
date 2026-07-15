@@ -102,8 +102,16 @@
   .osd.tele-bc {
     bottom: 24px; left: 50%; transform: translateX(-50%);
     color: rgba(139,150,179,.45);
-    display: flex; align-items: center; gap: 1.1em;
+    display: flex; align-items: center;
   }
+  .osd.tele-bc > * + * {
+    border-left: 1px solid var(--line);
+    padding-left: 1.2em; margin-left: 1.2em;
+  }
+  .osd.tele-bc .ver { color: rgba(56,232,255,.4); }
+
+  #fx { position: fixed; inset: 0; width: 100%; height: 100%;
+        z-index: 2; pointer-events: none; }
 
   body.armed .osd.tele-tc {
     color: var(--accent);
@@ -316,6 +324,7 @@
 <div class="sweep" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 <div class="static" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <div class="corner tl" aria-hidden="true"></div>
 <div class="corner tr" aria-hidden="true"></div>
@@ -330,6 +339,7 @@
 <div class="osd tele-br" id="lq" aria-hidden="true">LQ 100</div>
 <div class="osd tele-bc">
   <span>© FPVshop.nl</span>
+  <span class="ver" aria-hidden="true">FPVOS v0.9 · R29</span>
   <span class="lang"><button type="button" data-setlang="nl" aria-label="Nederlands">NL</button>&nbsp;/&nbsp;<button type="button" data-setlang="en" aria-label="English">EN</button></span>
   <button type="button" class="ping" id="ping">PING BIJ LAUNCH</button>
 </div>
@@ -560,6 +570,110 @@
     lq.textContent = 'LQ 100';
     lq.classList.remove('low');
   });
+
+  /* ---------- flight sim: a quad that chases the cursor -----------------
+     Second-order spring-damper dynamics — accelerates toward the pointer,
+     overshoots, banks into turns like a slightly loose PID tune. Idles in
+     a figure-eight patrol above the grid when the pointer rests.          */
+  var fx = document.getElementById('fx');
+  if (fx && !reduceMotion && fx.getContext) {
+    var ctx = fx.getContext('2d');
+    var W = 0, H = 0, DPR = Math.min(2, window.devicePixelRatio || 1);
+    function sizeFx() {
+      W = window.innerWidth; H = window.innerHeight;
+      fx.width = W * DPR; fx.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    sizeFx();
+    window.addEventListener('resize', sizeFx);
+
+    var px = W * 0.5, py = H * 0.72, vx = 0, vy = 0;
+    var tgtX = px, tgtY = py, lastMove = -1e9;
+    var phase = 0, tt = 0, trail = [];
+
+    document.addEventListener('pointermove', function (e) {
+      tgtX = e.clientX; tgtY = e.clientY; lastMove = performance.now();
+    }, { passive: true });
+
+    var grid = document.querySelector('.gridfloor');
+    var gpx = 0;
+
+    function frame(now) {
+      tt += 0.008;
+      var gx, gy;
+      if (now - lastMove < 3500) { gx = tgtX; gy = tgtY; }
+      else {
+        gx = W * 0.5 + Math.sin(tt) * W * 0.28;
+        gy = H * 0.72 + Math.sin(tt * 2) * H * 0.05;
+      }
+
+      /* P on position error, D as velocity damping */
+      vx = (vx + (gx - px) * 0.0038) * 0.93;
+      vy = (vy + (gy - py) * 0.0038) * 0.93;
+      px += vx; py += vy;
+
+      var speed = Math.sqrt(vx * vx + vy * vy);
+      var bank = Math.max(-0.55, Math.min(0.55, vx * 0.05));
+      phase += 0.55 + speed * 0.12;
+
+      trail.push({ x: px, y: py });
+      if (trail.length > 16) trail.shift();
+
+      ctx.clearRect(0, 0, W, H);
+
+      /* trail */
+      for (var i = 0; i < trail.length; i++) {
+        ctx.globalAlpha = (i / trail.length) * 0.22;
+        ctx.fillStyle = '#f96a13';
+        ctx.beginPath();
+        ctx.arc(trail[i].x, trail[i].y, 1.2, 0, 6.283);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      /* quad */
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(bank);
+      var s = 15;
+      ctx.strokeStyle = 'rgba(56,232,255,.55)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-s, -s); ctx.lineTo(s, s);
+      ctx.moveTo(-s, s); ctx.lineTo(s, -s);
+      ctx.stroke();
+      var corners = [[-s, -s], [s, -s], [-s, s], [s, s]];
+      for (var c = 0; c < 4; c++) {
+        ctx.strokeStyle = 'rgba(249,106,19,.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(corners[c][0], corners[c][1], 5.5, 0, 6.283);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(249,106,19,.85)';
+        ctx.beginPath();
+        ctx.arc(corners[c][0], corners[c][1], 5.5, phase + c * 1.57, phase + c * 1.57 + 3.6);
+        ctx.stroke();
+      }
+      ctx.shadowColor = 'rgba(249,106,19,.8)';
+      ctx.shadowBlur = 8;
+      ctx.fillStyle = '#f96a13';
+      ctx.beginPath();
+      ctx.arc(0, 0, 2.4, 0, 6.283);
+      ctx.fill();
+      ctx.restore();
+
+      /* grid parallax follows the pointer, lerped */
+      if (grid) {
+        var mx = (tgtX / Math.max(1, W) - 0.5) * 2;
+        gpx += (mx * 16 - gpx) * 0.04;
+        grid.style.transform =
+          'perspective(55vh) rotateX(62deg) translateX(' + gpx.toFixed(2) + 'px)';
+      }
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
 
   /* ---------- init ---------- */
   var saved = null;
