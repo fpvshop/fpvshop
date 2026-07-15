@@ -3,9 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FPVshop.nl — Morgen vlieg je weer · binnenkort open</title>
-<meta name="description" content="FPVshop.nl — tinywhoops, onderdelen en accu's, op de plank in Nederland. Binnenkort open. / Tinywhoops, parts and batteries, stocked in the Netherlands. Opening soon.">
+<title>FPVshop.nl — FPV shop Nederland · tinywhoops, onderdelen & accu's</title>
+<meta name="description" content="FPVshop.nl wordt dé FPV-shop van Nederland: tinywhoops, frames, motors, props, ELRS receivers en 1S–6S LiPo accu's. Echte voorraad, verzonden uit Nederland. Binnenkort open — morgen vlieg je weer.">
+<link rel="canonical" href="https://fpvshop.nl/">
+<meta name="theme-color" content="#0d1424">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FPVshop.nl">
+<meta property="og:url" content="https://fpvshop.nl/">
+<meta property="og:title" content="FPVshop.nl — FPV shop Nederland · binnenkort open">
+<meta property="og:description" content="Tinywhoops, onderdelen en accu's — op de plank in Nederland. Morgen vlieg je weer.">
+<meta property="og:image" content="https://fpvshop.nl/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FPVshop.nl — FPV shop Nederland · binnenkort open">
+<meta name="twitter:description" content="Tinywhoops, onderdelen en accu's — op de plank in Nederland.">
+<meta name="twitter:image" content="https://fpvshop.nl/og.png">
 <link rel="icon" type="image/png" href="logo.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "OnlineStore",
+      "@id": "https://fpvshop.nl/#org",
+      "name": "FPVshop.nl",
+      "url": "https://fpvshop.nl/",
+      "logo": "https://fpvshop.nl/logo.png",
+      "image": "https://fpvshop.nl/og.png",
+      "email": "info@fpvshop.nl",
+      "slogan": "Morgen vlieg je weer.",
+      "description": "FPV-specialist voor Nederland en België: tinywhoops, FPV-onderdelen en LiPo-accu's, met echte voorraad in Nederland. Binnenkort open.",
+      "areaServed": ["NL", "BE"],
+      "sameAs": ["https://www.instagram.com/fpvshopnl"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://fpvshop.nl/#site",
+      "name": "FPVshop.nl",
+      "url": "https://fpvshop.nl/",
+      "inLanguage": ["nl", "en"],
+      "publisher": { "@id": "https://fpvshop.nl/#org" }
+    }
+  ]
+}
+</script>
 <style>
   :root {
     --ground: #090e1a;
@@ -229,6 +273,7 @@
     text-shadow: 0 0 12px rgba(249,106,19,.35);
   }
 
+  .seo { color: rgba(139,150,179,.45); font-size: .72rem; line-height: 1.7; max-width: 28rem; }
   .dealer { color: rgba(139,150,179,.6); font-size: .78rem; }
   .dealer a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
   .dealer a:hover { color: var(--accent); border-color: var(--accent); }
@@ -291,6 +336,7 @@
     main > *:nth-child(3) { animation-delay: .32s; }
     main > *:nth-child(4) { animation-delay: .44s; }
     main > *:nth-child(5) { animation-delay: .56s; }
+    main > *:nth-child(6) { animation-delay: .66s; }
     .osd, .corner { opacity: 0; animation: boot .45s ease-out .7s forwards; }
     .osd.tele-st { animation: none; }
     .rec-dot { animation: blink 1.6s steps(2, start) infinite; }
@@ -378,6 +424,8 @@
   </div>
 
   <p class="dealer">Brand or distributor? <a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></p>
+
+  <p class="seo" id="seo">FPVshop.nl wordt dé Nederlandse FPV-shop: tinywhoop-onderdelen, frames, motors, props, ELRS receivers en 1S–6S LiPo-accu's — echte voorraad, snel verzonden uit Nederland.</p>
 </main>
 
 <div class="failsafe" id="failsafe" role="dialog" aria-modal="true" aria-labelledby="fs-title">
@@ -410,7 +458,7 @@
 
   var S = {
     nl: {
-      title:        'FPVshop.nl — Morgen vlieg je weer · binnenkort open',
+      title:        "FPVshop.nl — FPV shop Nederland · tinywhoops, onderdelen & accu's",
       heroTomorrow: 'Morgen vlieg je weer',
       heroToday:    'Vandaag vlieg je weer',
       almost:       '*nou ja, bijna — binnenkort open',
@@ -422,10 +470,11 @@
       fsBtn:        'HAAL ME TERUG',
       fsNote:       'Eén mail bij de launch, daarna stilte. Geen nieuwsbrief.',
       fsDone:       'LINK RESTORED — tot op launch day.',
-      fsClose:      'Sluiten'
+      fsClose:      'Sluiten',
+      seo:          "FPVshop.nl wordt dé Nederlandse FPV-shop: tinywhoop-onderdelen, frames, motors, props, ELRS receivers en 1S–6S LiPo-accu's — echte voorraad, snel verzonden uit Nederland."
     },
     en: {
-      title:        'FPVshop.nl — Fly again tomorrow · opening soon',
+      title:        'FPVshop.nl — FPV shop Netherlands · tinywhoops, parts & batteries',
       heroTomorrow: 'Fly again tomorrow',
       heroToday:    'Fly again today',
       almost:       '*well, almost — opening soon',
@@ -437,7 +486,8 @@
       fsBtn:        'BRING ME BACK',
       fsNote:       'One email at launch, then silence. No newsletter.',
       fsDone:       'LINK RESTORED — see you on launch day.',
-      fsClose:      'Close'
+      fsClose:      'Close',
+      seo:          'FPVshop.nl will be the Dutch FPV shop: tinywhoop parts, frames, motors, props, ELRS receivers and 1S–6S LiPo batteries — real stock, shipped fast from the Netherlands.'
     }
   };
 
@@ -466,6 +516,7 @@
     fsNote.textContent = t.fsNote;
     fsDone.textContent = t.fsDone;
     fsClose.setAttribute('aria-label', t.fsClose);
+    document.getElementById('seo').textContent = t.seo;
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-setlang]').forEach(function (b) {
       var on = b.getAttribute('data-setlang') === lang;
