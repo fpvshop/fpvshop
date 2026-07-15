@@ -164,6 +164,7 @@
     width: 1px; height: 1.1em; background: var(--line);
   }
   .osd.tele-bc .ver { color: rgba(56,232,255,.4); }
+  .osd.tele-bc small { font-size: inherit; } /* <small> keeps footer sizing */
 
   #fx { position: fixed; inset: 0; width: 100%; height: 100%;
         z-index: 2; pointer-events: none; }
@@ -204,6 +205,13 @@
 
   a:focus-visible, button:focus-visible, input:focus-visible {
     outline: 2px solid var(--accent); outline-offset: 3px;
+  }
+
+  /* visually hidden, still read by assistive tech */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
   }
 
   /* ---------- content ---------- */
@@ -262,6 +270,7 @@
   .contact {
     display: flex; flex-wrap: wrap; justify-content: center;
     gap: .4em 1.6em; font-size: .95rem; color: var(--muted);
+    font-style: normal; /* <address> defaults to italic */
   }
   .contact a {
     color: var(--text); text-decoration: none;
@@ -298,8 +307,8 @@
     text-align: left;
     position: relative;
   }
-  .fs-title { font-size: .8rem; letter-spacing: .2em; color: var(--accent);
-              text-shadow: 0 0 12px rgba(249,106,19,.4); }
+  .fs-title { font-size: .8rem; font-weight: 400; letter-spacing: .2em; color: var(--accent);
+              text-shadow: 0 0 12px rgba(249,106,19,.4); } /* font-weight: <h2> defaults to bold */
   .fs-msg { font-size: .82rem; letter-spacing: .04em; line-height: 1.8; color: var(--muted); }
   .fs-form { display: flex; gap: .6rem; }
   .fs-form input {
@@ -398,12 +407,12 @@
 <div class="osd tele-tr" aria-hidden="true">CH R4 · 5806</div>
 <div class="osd tele-bl" id="bat" aria-hidden="true">BAT 4.35V</div>
 <div class="osd tele-br" id="lq" aria-hidden="true">LQ 100</div>
-<div class="osd tele-bc">
-  <span>© FPVshop.nl</span>
+<footer class="osd tele-bc">
+  <small>© FPVshop.nl</small>
   <span class="ver" aria-hidden="true">FPVOS v0.9 · R29</span>
-  <span class="lang"><button type="button" data-setlang="nl" aria-label="Nederlands">NL</button>&nbsp;/&nbsp;<button type="button" data-setlang="en" aria-label="English">EN</button></span>
-  <button type="button" class="ping" id="ping">PING BIJ LAUNCH</button>
-</div>
+  <span class="lang" role="group" aria-label="Taal / Language"><button type="button" data-setlang="nl" aria-label="Nederlands" aria-pressed="true">NL</button>&nbsp;/&nbsp;<button type="button" data-setlang="en" aria-label="English" aria-pressed="false">EN</button></span>
+  <button type="button" class="ping" id="ping" aria-haspopup="dialog" aria-controls="failsafe">PING BIJ LAUNCH</button>
+</footer>
 
 <main class="drift">
   <div class="mark" role="img" aria-label="FPVshop.nl">
@@ -413,28 +422,28 @@
 
   <div class="hero-wrap">
     <h1 id="hero"><span id="hero-text">Morgen vlieg je weer</span><span class="cursor" aria-hidden="true"></span></h1>
-    <div class="almost" id="almost">*nou ja, bijna — binnenkort open</div>
+    <p class="almost" id="almost">*nou ja, bijna — binnenkort open</p>
   </div>
 
   <p class="lead" id="lead">Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland.</p>
 
-  <div class="contact">
+  <address class="contact">
     <span><a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></span>
     <span><a href="https://www.instagram.com/fpvshopnl" rel="me">Instagram @fpvshopnl</a></span>
-  </div>
+  </address>
 
   <p class="dealer">Brand or distributor? <a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></p>
 
   <p class="seo" id="seo">FPVshop.nl wordt dé Nederlandse FPV-shop: tinywhoop-onderdelen, frames, motors, props, ELRS receivers en 1S–6S LiPo-accu's — echte voorraad, snel verzonden uit Nederland.</p>
 </main>
 
-<div class="failsafe" id="failsafe" role="dialog" aria-modal="true" aria-labelledby="fs-title">
+<div class="failsafe" id="failsafe" role="dialog" aria-modal="true" aria-labelledby="fs-title" aria-describedby="fs-msg">
   <div class="fs-card" id="fs-card">
     <button class="fs-close" id="fs-close" type="button" aria-label="Sluiten">✕</button>
-    <div class="fs-title" id="fs-title">FAILSAFE — RTH</div>
-    <div class="fs-msg" id="fs-msg"></div>
+    <h2 class="fs-title" id="fs-title">FAILSAFE — RTH</h2>
+    <p class="fs-msg" id="fs-msg"></p>
     <form class="fs-form" id="fs-form" novalidate>
-      <label for="fs-email" style="position:absolute;left:-9999px;">E-mail</label>
+      <label for="fs-email" class="sr-only">E-mail</label>
       <input id="fs-email" type="email" required placeholder="jij@adres.nl" autocomplete="email">
       <button type="submit" id="fs-btn">HAAL ME TERUG</button>
     </form>
