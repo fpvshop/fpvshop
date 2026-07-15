@@ -8,12 +8,13 @@
 <link rel="icon" type="image/png" href="logo.png">
 <style>
   :root {
-    --ground: #0d1424;
-    --raise: #121b31;
+    --ground: #0b111f;
+    --raise: #101a30;
     --text: #eef1f8;
     --muted: #8b96b3;
+    --dim: rgba(139, 150, 179, .55);
     --accent: #f96a13;
-    --line: rgba(139, 150, 179, .25);
+    --line: rgba(139, 150, 179, .22);
     --mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
     --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
@@ -23,8 +24,7 @@
   html, body { height: 100%; }
 
   body {
-    background:
-      radial-gradient(130% 90% at 50% 0%, var(--raise) 0%, var(--ground) 55%);
+    background: radial-gradient(130% 90% at 50% 0%, var(--raise) 0%, var(--ground) 55%);
     color: var(--text);
     font-family: var(--sans);
     min-height: 100vh;
@@ -36,102 +36,104 @@
     overflow-x: hidden;
   }
 
-  /* ------ goggle-feed atmosphere ------ */
-  .scanlines, .vignette { position: fixed; inset: 0; pointer-events: none; }
+  /* ---------- atmosphere ---------- */
+  .scanlines, .vignette, .static { position: fixed; inset: 0; pointer-events: none; }
   .scanlines {
-    background: repeating-linear-gradient(
-      to bottom, transparent 0 2px, rgba(0,0,0,.12) 2px 3px);
-    opacity: .45;
+    background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,.10) 2px 3px);
+    opacity: .4;
   }
   .vignette {
-    background: radial-gradient(120% 100% at 50% 50%,
-      transparent 55%, rgba(4, 8, 18, .5) 100%);
+    background: radial-gradient(120% 100% at 50% 50%, transparent 58%, rgba(3, 7, 16, .5) 100%);
+  }
+  .static {
+    z-index: 8; opacity: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(139,150,179,.08) 0 2px, transparent 2px 5px),
+      radial-gradient(100% 100% at 50% 50%, rgba(20,30,55,.6), rgba(5,9,18,.9));
   }
 
-  /* ------ OSD frame ------ */
-  .osd { position: fixed; font-family: var(--mono); font-size: .68rem;
-         letter-spacing: .12em; color: var(--muted); z-index: 2; }
-  .corner { position: fixed; width: 26px; height: 26px; z-index: 2;
-            border: 0 solid var(--line); }
-  .tl { top: 18px; left: 18px; border-top-width: 1.5px; border-left-width: 1.5px; }
-  .tr { top: 18px; right: 18px; border-top-width: 1.5px; border-right-width: 1.5px; }
-  .bl { bottom: 18px; left: 18px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
-  .br { bottom: 18px; right: 18px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+  /* ---------- HUD frame: texture, not clutter ---------- */
+  .osd {
+    position: fixed; z-index: 2;
+    font-family: var(--mono); font-size: .62rem;
+    letter-spacing: .14em; color: var(--dim);
+    user-select: none;
+  }
+  .corner { position: fixed; width: 22px; height: 22px; z-index: 2; border: 0 solid var(--line); }
+  .tl { top: 20px; left: 20px; border-top-width: 1px; border-left-width: 1px; }
+  .tr { top: 20px; right: 20px; border-top-width: 1px; border-right-width: 1px; }
+  .bl { bottom: 20px; left: 20px; border-bottom-width: 1px; border-left-width: 1px; }
+  .br { bottom: 20px; right: 20px; border-bottom-width: 1px; border-right-width: 1px; }
 
-  .osd.tele-tl { top: 26px; left: 58px; }
-  .osd.tele-tc { top: 26px; left: 50%; transform: translateX(-50%); }
-  .osd.tele-tr { top: 26px; right: 58px; text-align: right; }
-  .osd.tele-bl { bottom: 26px; left: 58px; }
-  .osd.tele-br { bottom: 26px; right: 58px; text-align: right; }
-  .osd.tele-bc { bottom: 26px; left: 50%; transform: translateX(-50%);
-                 color: rgba(139,150,179,.5); white-space: nowrap; }
+  .osd.tele-tl { top: 27px; left: 56px; }
+  .osd.tele-tc { top: 27px; left: 50%; transform: translateX(-50%); cursor: pointer; }
+  .osd.tele-tr { top: 27px; right: 56px; text-align: right; }
+  .osd.tele-bl { bottom: 27px; left: 56px; }
+  .osd.tele-br { bottom: 27px; right: 56px; text-align: right; }
+  .osd.tele-bc {
+    bottom: 27px; left: 50%; transform: translateX(-50%);
+    color: rgba(139,150,179,.45); white-space: nowrap;
+  }
+
+  body.armed .osd.tele-tc { color: var(--accent); }
+  .osd.low { color: var(--accent); }
 
   .rec-dot {
     display: inline-block; width: .5em; height: .5em; border-radius: 50%;
-    background: var(--accent); margin-right: .55em; vertical-align: baseline;
+    background: var(--accent); margin-right: .55em;
   }
 
-  /* language switch, lives in the footer OSD line */
   .lang button {
     background: none; border: none; cursor: pointer;
-    font: inherit; color: inherit; letter-spacing: inherit;
-    padding: 0 .1em;
+    font: inherit; color: inherit; letter-spacing: inherit; padding: 0 .1em;
   }
   .lang button.on { color: var(--accent); }
   .lang button:hover { color: var(--text); }
   .lang button:focus-visible { outline: 1.5px solid var(--accent); outline-offset: 2px; }
 
-  /* ------ content ------ */
+  /* ---------- content: one axis, strict rhythm ---------- */
   main {
     position: relative; z-index: 3;
     max-width: 40rem;
     display: flex; flex-direction: column; align-items: center;
     text-align: center;
-    gap: 2.75rem;
+    gap: 2.6rem;
   }
 
-  /* CSS wordmark */
   .mark { display: flex; flex-direction: column; align-items: center; gap: .12em;
           font-size: clamp(3.4rem, 11vw, 5.2rem); line-height: 1; }
-  .mark-top {
-    position: relative;
-    font-weight: 900; letter-spacing: -.035em;
-    padding-right: .5em;
-  }
-  .blades { position: absolute; top: 0; right: 0; width: .5em; height: 1em;
-            pointer-events: none; }
-  .blades i {
-    position: absolute; left: -.06em; display: block;
-    background: var(--accent); border-radius: 999px;
-  }
+  .mark-top { position: relative; font-weight: 900; letter-spacing: -.035em; padding-right: .5em; }
+  .blades { position: absolute; top: 0; right: 0; width: .5em; height: 1em; pointer-events: none; }
+  .blades i { position: absolute; left: -.06em; display: block; background: var(--accent); border-radius: 999px; }
   .blades .b1 { width: .52em; height: .13em; top: .08em; transform: rotate(-38deg); transform-origin: left center; }
   .blades .b2 { width: .44em; height: .12em; top: .62em; transform: rotate(34deg); transform-origin: left center; opacity: .88; }
-  .mark-sub {
-    font-weight: 300; font-size: .32em;
-    letter-spacing: .42em; margin-right: -.42em;
-  }
+  .mark-sub { font-weight: 300; font-size: .32em; letter-spacing: .42em; margin-right: -.42em; }
 
-  /* hero as OSD readout — deliberately NOT the wordmark's voice */
+  .hero-wrap { display: flex; flex-direction: column; gap: .9rem; align-items: center; }
+
   h1 {
     font-family: var(--mono);
     font-weight: 600;
-    font-size: clamp(1.3rem, 4.4vw, 2.1rem);
+    font-size: clamp(1.25rem, 4.2vw, 2rem);
     letter-spacing: .16em;
     text-transform: uppercase;
     line-height: 1.5;
     text-wrap: balance;
   }
   h1 .cursor {
-    display: inline-block;
-    width: .09em; height: .82em;
-    background: var(--accent);
-    margin-left: .22em;
-    vertical-align: -.06em;
+    display: inline-block; width: .09em; height: .82em;
+    background: var(--accent); margin-left: .22em; vertical-align: -.06em;
   }
+  .almost {
+    font-family: var(--mono); font-size: .78rem; letter-spacing: .12em;
+    color: var(--dim); visibility: hidden;
+  }
+  body.armed .almost { visibility: visible; }
 
   p.lead {
-    color: var(--muted); line-height: 1.75; font-size: 1.04rem;
-    font-weight: 400; max-width: 30rem; text-wrap: pretty;
+    color: var(--muted); line-height: 1.75; font-size: 1.02rem;
+    max-width: 30rem; text-wrap: pretty;
   }
 
   .contact {
@@ -144,17 +146,64 @@
     transition: color .15s ease, border-color .15s ease;
   }
   .contact a:hover { color: var(--accent); border-color: var(--accent); }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px;
+  }
 
-  .dealer { color: rgba(139,150,179,.65); font-size: .78rem; letter-spacing: .01em; }
-  .dealer a { color: inherit; text-decoration: none;
-              border-bottom: 1px solid transparent; }
+  .dealer { color: rgba(139,150,179,.6); font-size: .78rem; }
+  .dealer a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
   .dealer a:hover { color: var(--accent); border-color: var(--accent); }
 
-  /* ------ boot sequence ------ */
+  /* ---------- failsafe panel (the signup) ---------- */
+  .failsafe {
+    position: fixed; inset: 0; z-index: 9;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 1.5rem;
+    background: rgba(5, 9, 18, .72);
+  }
+  .failsafe.open { display: flex; }
+  .fs-card {
+    background: var(--raise);
+    border: 1px solid var(--line);
+    max-width: 26rem; width: 100%;
+    padding: 2rem 1.8rem;
+    font-family: var(--mono);
+    display: flex; flex-direction: column; gap: 1.1rem;
+    text-align: left;
+    position: relative;
+  }
+  .fs-title { font-size: .8rem; letter-spacing: .2em; color: var(--accent); }
+  .fs-msg { font-size: .82rem; letter-spacing: .04em; line-height: 1.8; color: var(--muted); }
+  .fs-form { display: flex; gap: .6rem; }
+  .fs-form input {
+    flex: 1; min-width: 0;
+    background: var(--ground); color: var(--text);
+    border: 1px solid var(--line);
+    font: inherit; font-size: .82rem;
+    padding: .7em .9em;
+  }
+  .fs-form input::placeholder { color: rgba(139,150,179,.5); }
+  .fs-form button {
+    background: var(--accent); color: #0b111f;
+    border: none; cursor: pointer;
+    font: inherit; font-size: .78rem; font-weight: 600; letter-spacing: .1em;
+    padding: .7em 1.1em;
+  }
+  .fs-form button:hover { filter: brightness(1.12); }
+  .fs-close {
+    position: absolute; top: .6rem; right: .8rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--dim); font: inherit; font-size: .9rem;
+  }
+  .fs-close:hover { color: var(--text); }
+  .fs-done { font-size: .8rem; letter-spacing: .08em; color: var(--text); display: none; }
+  .fs-card.done .fs-form, .fs-card.done .fs-msg { display: none; }
+  .fs-card.done .fs-done { display: block; }
+
+  /* ---------- motion (all gated) ---------- */
   @media (prefers-reduced-motion: no-preference) {
-    main > * { opacity: 0; transform: translateY(8px);
-               animation: boot .55s ease-out forwards; }
+    main > * { opacity: 0; transform: translateY(8px); animation: boot .55s ease-out forwards; }
     main > *:nth-child(1) { animation-delay: .05s; }
     main > *:nth-child(2) { animation-delay: .2s; }
     main > *:nth-child(3) { animation-delay: .32s; }
@@ -163,13 +212,32 @@
     .osd, .corner { opacity: 0; animation: boot .45s ease-out .7s forwards; }
     .rec-dot { animation: blink 1.6s steps(2, start) infinite; }
     h1 .cursor { animation: blink 1.1s steps(2, start) infinite; }
+    body.armed .drift { animation: drift 9s ease-in-out infinite alternate; }
+    h1.glitch { animation: glitch .38s steps(3) 1; }
+    body.signal-loss .static { animation: burst .75s steps(14) 1; }
     @keyframes boot { to { opacity: 1; transform: none; } }
     @keyframes blink { 50% { opacity: .15; } }
+    @keyframes drift {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      30%  { transform: translate(2px, -3px) rotate(.12deg); }
+      65%  { transform: translate(-2px, -1px) rotate(-.1deg); }
+      100% { transform: translate(1px, -4px) rotate(.08deg); }
+    }
+    @keyframes glitch {
+      0%   { transform: translate(0); clip-path: inset(0 0 0 0); }
+      25%  { transform: translate(-3px, 1px) skewX(-4deg); clip-path: inset(10% 0 55% 0); }
+      50%  { transform: translate(3px, -1px) skewX(3deg); clip-path: inset(60% 0 8% 0); }
+      75%  { transform: translate(-2px, 0) skewX(-2deg); clip-path: inset(30% 0 30% 0); }
+      100% { transform: translate(0); clip-path: inset(0 0 0 0); }
+    }
+    @keyframes burst { 0% { opacity: .95; } 60% { opacity: .55; } 100% { opacity: 0; } }
   }
 
   @media (max-width: 620px) {
-    .osd.tele-tr, .osd.tele-bl, .osd.tele-br, .osd.tele-tc { display: none; }
-    .osd.tele-bc { font-size: .62rem; }
+    .osd.tele-tr, .osd.tele-bl { display: none; }
+    .osd { font-size: .56rem; }
+    .osd.tele-bc { font-size: .58rem; }
+    .fs-form { flex-direction: column; }
   }
 </style>
 </head>
@@ -177,6 +245,7 @@
 
 <div class="scanlines" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
+<div class="static" aria-hidden="true"></div>
 
 <div class="corner tl" aria-hidden="true"></div>
 <div class="corner tr" aria-hidden="true"></div>
@@ -184,24 +253,24 @@
 <div class="corner br" aria-hidden="true"></div>
 
 <div class="osd tele-tl" aria-hidden="true"><span class="rec-dot"></span>REC</div>
-<div class="osd tele-tc" aria-hidden="true">PRE-ARM</div>
+<div class="osd tele-tc" id="status" title="">PRE-ARM</div>
 <div class="osd tele-tr" aria-hidden="true">CH R4 · 5806</div>
-<div class="osd tele-bl" aria-hidden="true">BAT 4.35V</div>
-<div class="osd tele-br" aria-hidden="true">LQ 100</div>
+<div class="osd tele-bl" id="bat" aria-hidden="true">BAT 4.35V</div>
+<div class="osd tele-br" id="lq" aria-hidden="true">LQ 100</div>
 <div class="osd tele-bc lang">© FPVshop.nl&nbsp;&nbsp;·&nbsp;&nbsp;<button type="button" data-setlang="nl" aria-label="Nederlands">NL</button>&nbsp;/&nbsp;<button type="button" data-setlang="en" aria-label="English">EN</button></div>
 
-<main>
+<main class="drift">
   <div class="mark" role="img" aria-label="FPVshop.nl">
     <div class="mark-top">FPV<span class="blades" aria-hidden="true"><i class="b1"></i><i class="b2"></i></span></div>
     <div class="mark-sub">shop.nl</div>
   </div>
 
-  <h1><span data-nl="Morgen vlieg je weer" data-en="Fly again tomorrow">Morgen vlieg je weer</span><span class="cursor" aria-hidden="true"></span></h1>
+  <div class="hero-wrap">
+    <h1 id="hero"><span id="hero-text">Morgen vlieg je weer</span><span class="cursor" aria-hidden="true"></span></h1>
+    <div class="almost" id="almost">*nou ja, bijna — binnenkort open</div>
+  </div>
 
-  <p class="lead" data-nl="Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland."
-     data-en="Opening soon — tinywhoops, parts and batteries, stocked on the shelf in the Netherlands.">
-    Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland.
-  </p>
+  <p class="lead" id="lead">Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland.</p>
 
   <div class="contact">
     <span><a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></span>
@@ -211,30 +280,208 @@
   <p class="dealer">Brand or distributor? <a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></p>
 </main>
 
+<div class="failsafe" id="failsafe" role="dialog" aria-modal="true" aria-labelledby="fs-title">
+  <div class="fs-card" id="fs-card">
+    <button class="fs-close" id="fs-close" type="button" aria-label="Sluiten">✕</button>
+    <div class="fs-title" id="fs-title">FAILSAFE — RTH</div>
+    <div class="fs-msg" id="fs-msg">Return to home: laat je e-mail achter en we halen je terug voor launch day.</div>
+    <form class="fs-form" id="fs-form" novalidate>
+      <label for="fs-email" class="sr-only" style="position:absolute;left:-9999px;">E-mail</label>
+      <input id="fs-email" type="email" required placeholder="jij@adres.nl" autocomplete="email">
+      <button type="submit" id="fs-btn">HAAL ME TERUG</button>
+    </form>
+    <div class="fs-done" id="fs-done">LINK RESTORED — tot op launch day.</div>
+  </div>
+</div>
+
 <script>
 (function () {
-  var els = document.querySelectorAll('[data-nl]');
-  var btns = document.querySelectorAll('[data-setlang]');
-  function setLang(l) {
-    document.documentElement.lang = l;
-    els.forEach(function (el) { el.textContent = el.getAttribute('data-' + l); });
-    btns.forEach(function (b) {
-      var on = b.getAttribute('data-setlang') === l;
+  'use strict';
+
+  /* ==== CONFIG ============================================================
+     Email capture endpoint. Paste your Brevo form action URL here
+     (Brevo → Contacts → Forms → your form → integrate → <form action="...">,
+     looks like https://xxxxxxxx.sibforms.com/serve/XXXXXXX).
+     Leave '' to fall back to a prefilled mailto to info@fpvshop.nl.        */
+  var FORM_ENDPOINT = '';
+  /* ======================================================================= */
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- i18n ---------- */
+  var S = {
+    nl: {
+      heroIdle:  'Morgen vlieg je weer',
+      heroArmed: 'Vandaag vlieg je weer',
+      almost:    '*nou ja, bijna — binnenkort open',
+      lead:      "Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland.",
+      fsTitle:   'FAILSAFE — RTH ACTIEF',
+      fsMsg:     'Signaal kwijt. Return to home: laat je e-mail achter en we halen je terug voor launch day.',
+      fsPlaceholder: 'jij@adres.nl',
+      fsBtn:     'HAAL ME TERUG',
+      fsDone:    'LINK RESTORED — tot op launch day.',
+      fsClose:   'Sluiten'
+    },
+    en: {
+      heroIdle:  'Fly again tomorrow',
+      heroArmed: 'Fly again today',
+      almost:    '*well, almost — opening soon',
+      lead:      'Opening soon — tinywhoops, parts and batteries, stocked on the shelf in the Netherlands.',
+      fsTitle:   'FAILSAFE — RTH ENGAGED',
+      fsMsg:     "Signal lost. Return to home: leave your email and we'll bring you back for launch day.",
+      fsPlaceholder: 'you@address.com',
+      fsBtn:     'BRING ME BACK',
+      fsDone:    'LINK RESTORED — see you on launch day.',
+      fsClose:   'Close'
+    }
+  };
+
+  var lang = 'nl';
+  var armed = false;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var heroText = $('hero-text'), hero = $('hero'), almost = $('almost'), lead = $('lead');
+  var status = $('status'), bat = $('bat'), lq = $('lq');
+  var failsafe = $('failsafe'), fsCard = $('fs-card'), fsTitle = $('fs-title'),
+      fsMsg = $('fs-msg'), fsForm = $('fs-form'), fsEmail = $('fs-email'),
+      fsBtn = $('fs-btn'), fsDone = $('fs-done'), fsClose = $('fs-close');
+
+  function render() {
+    var t = S[lang];
+    heroText.textContent = armed ? t.heroArmed : t.heroIdle;
+    almost.textContent = t.almost;
+    lead.textContent = t.lead;
+    fsTitle.textContent = t.fsTitle;
+    fsMsg.textContent = t.fsMsg;
+    fsEmail.placeholder = t.fsPlaceholder;
+    fsBtn.textContent = t.fsBtn;
+    fsDone.textContent = t.fsDone;
+    fsClose.setAttribute('aria-label', t.fsClose);
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-setlang]').forEach(function (b) {
+      var on = b.getAttribute('data-setlang') === lang;
       b.classList.toggle('on', on);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    try { localStorage.setItem('lang', l); } catch (e) {}
   }
-  btns.forEach(function (b) {
-    b.addEventListener('click', function () { setLang(b.getAttribute('data-setlang')); });
+
+  document.querySelectorAll('[data-setlang]').forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      lang = b.getAttribute('data-setlang');
+      try { localStorage.setItem('lang', lang); } catch (err) {}
+      render();
+    });
   });
+
+  /* ---------- state: ARM ---------- */
+  var volts = 4.35, voltTimer = null;
+
+  function arm() {
+    if (armed) return;
+    armed = true;
+    document.body.classList.add('armed');
+    status.textContent = 'ARMED';
+    render();
+    if (!reduceMotion) {
+      hero.classList.add('glitch');
+      setTimeout(function () { hero.classList.remove('glitch'); }, 420);
+    }
+    voltTimer = setInterval(function () {
+      volts = Math.max(3.5, volts - 0.01);
+      bat.textContent = 'BAT ' + volts.toFixed(2) + 'V';
+      if (volts <= 3.65) bat.classList.add('low');
+    }, 6000);
+    scheduleIdleFailsafe();
+  }
+
+  /* arm on first interaction, or auto-arm after 4s */
+  var armEvents = ['pointermove', 'pointerdown', 'keydown', 'touchstart'];
+  function armOnce() {
+    arm();
+    armEvents.forEach(function (ev) { document.removeEventListener(ev, armOnce); });
+  }
+  armEvents.forEach(function (ev) { document.addEventListener(ev, armOnce, { passive: true }); });
+  setTimeout(arm, 4000);
+
+  /* ---------- state: FAILSAFE ---------- */
+  var failsafeShown = false, idleTimer = null;
+
+  function scheduleIdleFailsafe() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(openFailsafe, 30000);
+  }
+  ['pointermove', 'keydown', 'touchstart', 'pointerdown'].forEach(function (ev) {
+    document.addEventListener(ev, function () { if (armed && !failsafeShown) scheduleIdleFailsafe(); }, { passive: true });
+  });
+
+  document.addEventListener('mouseout', function (e) {
+    if (!e.relatedTarget && e.clientY <= 0) openFailsafe();
+  });
+
+  status.title = 'failsafe';
+
+  function openFailsafe() {
+    if (failsafeShown) return;
+    failsafeShown = true;
+    clearTimeout(idleTimer);
+    lq.textContent = 'LQ 12';
+    lq.classList.add('low');
+    document.body.classList.add('signal-loss');
+    var delay = reduceMotion ? 0 : 650;
+    setTimeout(function () {
+      failsafe.classList.add('open');
+      fsEmail.focus();
+    }, delay);
+    setTimeout(function () { document.body.classList.remove('signal-loss'); }, 900);
+  }
+
+  function closeFailsafe() {
+    failsafe.classList.remove('open');
+    lq.textContent = 'LQ 100';
+    lq.classList.remove('low');
+    failsafeShown = true; /* fires once; status readout reopens it */
+  }
+  fsClose.addEventListener('click', closeFailsafe);
+  failsafe.addEventListener('click', function (e) { if (e.target === failsafe) closeFailsafe(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && failsafe.classList.contains('open')) closeFailsafe();
+  });
+  /* allow reopening via the status readout */
+  status.addEventListener('click', function () {
+    if (!failsafe.classList.contains('open')) { failsafeShown = false; openFailsafe(); }
+  });
+
+  /* ---------- signup submit ---------- */
+  fsForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var mail = (fsEmail.value || '').trim();
+    if (!mail || mail.indexOf('@') < 1) { fsEmail.focus(); return; }
+    if (FORM_ENDPOINT) {
+      var fd = new FormData();
+      fd.append('EMAIL', mail);
+      fetch(FORM_ENDPOINT, { method: 'POST', body: fd, mode: 'no-cors' })
+        .catch(function () {})
+        .finally(function () { fsCard.classList.add('done'); });
+    } else {
+      window.location.href = 'mailto:info@fpvshop.nl?subject=' +
+        encodeURIComponent('Launch ping FPVshop.nl') + '&body=' + encodeURIComponent(mail);
+      fsCard.classList.add('done');
+    }
+    lq.textContent = 'LQ 100';
+    lq.classList.remove('low');
+  });
+
+  /* ---------- init ---------- */
   var saved = null;
   try { saved = localStorage.getItem('lang'); } catch (e) {}
-  var auto = (navigator.language || 'nl').toLowerCase().indexOf('nl') === 0 ? 'nl' : 'en';
-  setLang(saved === 'nl' || saved === 'en' ? saved : auto);
+  lang = (saved === 'nl' || saved === 'en')
+    ? saved
+    : ((navigator.language || 'nl').toLowerCase().indexOf('nl') === 0 ? 'nl' : 'en');
+  render();
 })();
 </script>
-<noscript><style>.lang button { display: none; }</style></noscript>
+<noscript><style>.lang button, #status { display: none; } .failsafe { display: none !important; }</style></noscript>
 
 </body>
 </html>
