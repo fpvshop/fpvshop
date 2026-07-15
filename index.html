@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FPVshop.nl — FPV shop Nederland · tinywhoops, onderdelen & accu's</title>
-<meta name="description" content="FPVshop.nl wordt dé FPV-shop van Nederland: tinywhoops, frames, motors, props, ELRS receivers en 1S–6S LiPo accu's. Echte voorraad, verzonden uit Nederland. Binnenkort open — morgen vlieg je weer.">
+<title>FPVshop.nl — FPV shop Nederland · tinywhoops, onderdelen &amp; accu's</title>
+<meta name="description" content="Dé FPV-shop van Nederland: tinywhoops, onderdelen, ELRS receivers en 1S–6S LiPo-accu's op voorraad, snel verzonden uit Nederland. Binnenkort open.">
 <link rel="canonical" href="https://fpvshop.nl/">
 <meta name="theme-color" content="#0d1424">
 <meta property="og:type" content="website">
@@ -21,7 +21,8 @@
 <meta name="twitter:title" content="FPVshop.nl — FPV shop Nederland · binnenkort open">
 <meta name="twitter:description" content="Tinywhoops, onderdelen en accu's — op de plank in Nederland.">
 <meta name="twitter:image" content="https://fpvshop.nl/og.png">
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -31,7 +32,7 @@
       "@id": "https://fpvshop.nl/#org",
       "name": "FPVshop.nl",
       "url": "https://fpvshop.nl/",
-      "logo": "https://fpvshop.nl/logo.png",
+      "logo": "https://fpvshop.nl/logo-256.png",
       "image": "https://fpvshop.nl/og.png",
       "email": "info@fpvshop.nl",
       "slogan": "Morgen vlieg je weer.",
@@ -183,7 +184,8 @@
 
   .lang button {
     background: none; border: none; cursor: pointer;
-    font: inherit; color: inherit; letter-spacing: inherit; padding: 0 .1em;
+    font: inherit; color: inherit; letter-spacing: inherit;
+    padding: .55em .45em; line-height: 1; /* larger tap target */
   }
   .lang button.on { color: var(--accent); }
   .lang button:hover { color: var(--text); }
@@ -258,14 +260,14 @@
   }
   .almost {
     font-family: var(--mono); font-size: .78rem; letter-spacing: .12em;
-    color: var(--dim); display: none;
+    color: var(--muted); display: none;
   }
   body.variant-today .almost { display: block; }
 
-  p.lead {
-    color: var(--muted); line-height: 1.75; font-size: 1.02rem;
+  .lead {
+    color: var(--muted); line-height: 1.75; font-size: 1.02rem; font-weight: 400;
     max-width: 30rem; text-wrap: pretty;
-  }
+  } /* font-weight: <h2> defaults to bold — kept visually as a lead paragraph */
 
   .contact {
     display: flex; flex-wrap: wrap; justify-content: center;
@@ -282,8 +284,8 @@
     text-shadow: 0 0 12px rgba(249,106,19,.35);
   }
 
-  .seo { color: rgba(139,150,179,.45); font-size: .72rem; line-height: 1.7; max-width: 28rem; }
-  .dealer { color: rgba(139,150,179,.6); font-size: .78rem; }
+  .seo { color: var(--muted); font-size: .72rem; line-height: 1.7; max-width: 28rem; }
+  .dealer { color: var(--muted); font-size: .78rem; }
   .dealer a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
   .dealer a:hover { color: var(--accent); border-color: var(--accent); }
 
@@ -425,7 +427,7 @@
     <p class="almost" id="almost">*nou ja, bijna — binnenkort open</p>
   </div>
 
-  <p class="lead" id="lead">Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland.</p>
+  <h2 class="lead" id="lead">Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland.</h2>
 
   <address class="contact">
     <span><a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></span>
