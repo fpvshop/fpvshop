@@ -145,15 +145,16 @@
   /* footer CTA — the only way the failsafe opens */
   .ping {
     background: rgba(249,106,19,.07);
-    border: 1px solid rgba(249,106,19,.45);
+    border: none;
+    box-shadow: inset 0 0 0 1.5px rgba(249,106,19,.45);
     color: var(--accent);
     font: inherit; letter-spacing: .14em; cursor: pointer;
-    padding: .45em .9em;
+    padding: .5em .95em .5em 1.05em; /* extra left pad balances trailing letter-space */
     transition: background .15s ease, box-shadow .15s ease;
   }
   .ping:hover {
     background: rgba(249,106,19,.16);
-    box-shadow: 0 0 16px rgba(249,106,19,.3);
+    box-shadow: inset 0 0 0 1.5px rgba(249,106,19,.7), 0 0 16px rgba(249,106,19,.3);
   }
 
   a:focus-visible, button:focus-visible, input:focus-visible {
