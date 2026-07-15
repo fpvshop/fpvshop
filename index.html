@@ -100,9 +100,10 @@
   .osd.tele-bl { bottom: 27px; left: 56px; }
   .osd.tele-br { bottom: 27px; right: 56px; text-align: right; }
   .osd.tele-bc {
-    bottom: 24px; left: 50%; transform: translateX(-50%);
+    bottom: 24px; left: 1rem; right: 1rem;
     color: rgba(139,150,179,.45);
-    display: flex; align-items: center;
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; row-gap: .55em;
   }
   .osd.tele-bc > * + * {
     border-left: 1px solid var(--line);
@@ -320,7 +321,10 @@
   @media (max-width: 620px) {
     .osd.tele-tr, .osd.tele-bl { display: none; }
     .osd { font-size: .56rem; }
-    .osd.tele-bc { gap: .7em; bottom: 20px; }
+    .osd.tele-bc { bottom: 18px; }
+    .osd.tele-bc > * + * { padding-left: .8em; margin-left: .8em; }
+    .osd.tele-bc > .ping { margin-left: 1.6em; }
+    .osd.tele-bc > .ping::before { left: -.8em; }
     .fs-form { flex-direction: column; }
     .gridfloor { height: 26vh; }
   }
