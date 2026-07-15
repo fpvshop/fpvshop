@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPVshop.nl — binnenkort open</title>
+<meta name="description" content="FPVshop.nl — tinywhoops, onderdelen en accu's, op de plank in Nederland. Binnenkort open.">
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+  :root {
+    --ground: #0d1424;
+    --raise: #121b31;
+    --text: #eef1f8;
+    --muted: #8b96b3;
+    --accent: #f96a13;
+    --line: rgba(139, 150, 179, .25);
+    --mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    background:
+      radial-gradient(130% 90% at 50% 0%, var(--raise) 0%, var(--ground) 55%);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(4rem, 10vh, 6rem) 1.5rem;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ------ goggle-feed atmosphere ------ */
+  .scanlines, .vignette { position: fixed; inset: 0; pointer-events: none; }
+  .scanlines {
+    background: repeating-linear-gradient(
+      to bottom, transparent 0 2px, rgba(0,0,0,.12) 2px 3px);
+    opacity: .45;
+  }
+  .vignette {
+    background: radial-gradient(120% 100% at 50% 50%,
+      transparent 55%, rgba(4, 8, 18, .5) 100%);
+  }
+
+  /* ------ OSD frame ------ */
+  .osd { position: fixed; font-family: var(--mono); font-size: .68rem;
+         letter-spacing: .12em; color: var(--muted); z-index: 2; }
+  .corner { position: fixed; width: 26px; height: 26px; z-index: 2;
+            border: 0 solid var(--line); }
+  .tl { top: 18px; left: 18px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .tr { top: 18px; right: 18px; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .bl { bottom: 18px; left: 18px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .br { bottom: 18px; right: 18px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+  .osd.tele-tl { top: 26px; left: 58px; }
+  .osd.tele-tc { top: 26px; left: 50%; transform: translateX(-50%); }
+  .osd.tele-tr { top: 26px; right: 58px; text-align: right; }
+  .osd.tele-bl { bottom: 26px; left: 58px; }
+  .osd.tele-br { bottom: 26px; right: 58px; text-align: right; }
+  .osd.tele-bc { bottom: 26px; left: 50%; transform: translateX(-50%);
+                 color: rgba(139,150,179,.5); }
+
+  .rec-dot {
+    display: inline-block; width: .5em; height: .5em; border-radius: 50%;
+    background: var(--accent); margin-right: .55em; vertical-align: baseline;
+  }
+
+  /* ------ content ------ */
+  main {
+    position: relative; z-index: 3;
+    max-width: 38rem;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+    gap: 2.75rem;
+  }
+
+  /* CSS wordmark — identity, not hero */
+  .mark { display: flex; flex-direction: column; align-items: center; gap: .12em;
+          font-size: clamp(3.4rem, 11vw, 5.2rem); line-height: 1; }
+  .mark-top {
+    position: relative;
+    font-weight: 900; letter-spacing: -.035em;
+    padding-right: .5em;
+  }
+  .blades { position: absolute; top: 0; right: 0; width: .5em; height: 1em;
+            pointer-events: none; }
+  .blades i {
+    position: absolute; left: -.06em; display: block;
+    background: var(--accent); border-radius: 999px;
+  }
+  .blades .b1 { width: .52em; height: .13em; top: .08em; transform: rotate(-38deg); transform-origin: left center; }
+  .blades .b2 { width: .44em; height: .12em; top: .62em; transform: rotate(34deg); transform-origin: left center; opacity: .88; }
+  .mark-sub {
+    font-weight: 300; font-size: .32em;
+    letter-spacing: .42em; margin-right: -.42em;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 800; letter-spacing: -.028em; line-height: 1.08;
+    text-wrap: balance;
+  }
+  h1 .stop { color: var(--accent); }
+
+  p.lead {
+    color: var(--muted); line-height: 1.75; font-size: 1.04rem;
+    font-weight: 400; max-width: 30rem; text-wrap: pretty;
+  }
+
+  .contact {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: .4em 1.6em; font-size: .95rem; color: var(--muted);
+  }
+  .contact a {
+    color: var(--text); text-decoration: none;
+    border-bottom: 1px solid transparent; padding-bottom: 2px;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .contact a:hover { color: var(--accent); border-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .dealer { color: rgba(139,150,179,.65); font-size: .78rem; letter-spacing: .01em; }
+  .dealer a { color: inherit; text-decoration: none;
+              border-bottom: 1px solid transparent; }
+  .dealer a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ------ boot sequence ------ */
+  @media (prefers-reduced-motion: no-preference) {
+    main > * { opacity: 0; transform: translateY(8px);
+               animation: boot .55s ease-out forwards; }
+    main > *:nth-child(1) { animation-delay: .05s; }
+    main > *:nth-child(2) { animation-delay: .2s; }
+    main > *:nth-child(3) { animation-delay: .32s; }
+    main > *:nth-child(4) { animation-delay: .44s; }
+    main > *:nth-child(5) { animation-delay: .56s; }
+    .osd, .corner { opacity: 0; animation: boot .45s ease-out .7s forwards; }
+    .rec-dot { animation: blink 1.6s steps(2, start) infinite; }
+    @keyframes boot { to { opacity: 1; transform: none; } }
+    @keyframes blink { 50% { opacity: .25; } }
+  }
+
+  @media (max-width: 620px) {
+    .osd.tele-tr, .osd.tele-bl, .osd.tele-br, .osd.tele-tc { display: none; }
+    .osd.tele-bc { font-size: .6rem; width: max-content; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanlines" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="corner tl" aria-hidden="true"></div>
+<div class="corner tr" aria-hidden="true"></div>
+<div class="corner bl" aria-hidden="true"></div>
+<div class="corner br" aria-hidden="true"></div>
+
+<div class="osd tele-tl" aria-hidden="true"><span class="rec-dot"></span>REC</div>
+<div class="osd tele-tc" aria-hidden="true">PRE-ARM</div>
+<div class="osd tele-tr" aria-hidden="true">CH R4 · 5806</div>
+<div class="osd tele-bl" aria-hidden="true">BAT 4.35V</div>
+<div class="osd tele-br" aria-hidden="true">LQ 100</div>
+<div class="osd tele-bc">© FPVshop.nl</div>
+
+<main>
+  <div class="mark" role="img" aria-label="FPVshop.nl">
+    <div class="mark-top">FPV<span class="blades" aria-hidden="true"><i class="b1"></i><i class="b2"></i></span></div>
+    <div class="mark-sub">shop.nl</div>
+  </div>
+
+  <h1>Morgen vlieg je weer<span class="stop">.</span></h1>
+
+  <p class="lead">
+    Binnenkort open — tinywhoops, onderdelen en accu's, op de plank in Nederland.
+  </p>
+
+  <div class="contact">
+    <span><a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></span>
+    <span><a href="https://www.instagram.com/fpvshopnl" rel="me">Instagram @fpvshopnl</a></span>
+  </div>
+
+  <p class="dealer">Brand or distributor? <a href="mailto:info@fpvshop.nl">info@fpvshop.nl</a></p>
+</main>
+
+</body>
+</html>
